@@ -1,4 +1,5 @@
 import { xPositivePositionMax, xNegativePositionMax, defaultLateralMovementPerFrame } from "./constants";
+import { slowDownX } from "./movementUtils";
 
 export default class State {
     positionX: number;
@@ -18,7 +19,7 @@ export default class State {
         } else if (this.movingInXPositive) {
             this.positionalMomentumX = defaultLateralMovementPerFrame
         } else if (this.positionalMomentumX > 0 && !this.movingInXPositive) {
-            this.positionalMomentumX = 0;
+            this.positionalMomentumX = slowDownX(this.positionalMomentumX);
         }
 
         if ((this.movingInXNegative || this.positionalMomentumX < 0) && this.positionX < xNegativePositionMax) {
@@ -26,7 +27,7 @@ export default class State {
         } else if (this.movingInXNegative) {
             this.positionalMomentumX = -defaultLateralMovementPerFrame
         } else if (this.positionalMomentumX < 0 && !this.movingInXNegative) {
-            this.positionalMomentumX = 0;
+            this.positionalMomentumX = slowDownX(this.positionalMomentumX);;
         }
 
         this.positionX += this.positionalMomentumX
