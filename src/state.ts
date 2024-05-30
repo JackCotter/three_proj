@@ -1,5 +1,5 @@
 import { Vector3 } from "three";
-import { xPositivePositionMax, defaultLateralMovementPerFrame } from "./constants";
+import { xPositivePositionMax, xNegativePositionMax, defaultLateralMovementPerFrame } from "./constants";
 
 export default class State {
     positionalMomentumX: number;
@@ -18,18 +18,33 @@ export default class State {
         } else if (this.positionalMomentumX > 0 && !this.movingInXPositive) {
             this.positionalMomentumX = 0;
         }
+
+        if (this.movingInXNegative && position.x < xNegativePositionMax) {
+            this.movingInXNegative = false;
+        }
+        if (this.movingInXNegative) {
+            this.positionalMomentumX = -defaultLateralMovementPerFrame
+        } else if (this.positionalMomentumX < 0 && !this.movingInXNegative) {
+            this.positionalMomentumX = 0;
+        }
     }
 
     moveInXPositive() {
         this.movingInXPositive = true;
+        this.movingInXNegative = false;
     }
 
     moveInXNegative() {
-        this.movingInXPositive = true;
+        this.movingInXNegative = true;
+        this.movingInXPositive = false;
     }
 
-    stopInX() {
+    stopInXPositive() {
         this.movingInXPositive = false;
+    }
+
+    stopInXNegative() {
+        this.movingInXNegative = false;
     }
 
     constructor() {
