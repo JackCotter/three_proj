@@ -1,7 +1,10 @@
-import { Vector3 } from "three";
 import { xPositivePositionMax, xNegativePositionMax, defaultLateralMovementPerFrame } from "./constants";
 
 export default class State {
+    positionX: number;
+    positionY: number;
+    positionZ: number;
+
     positionalMomentumX: number;
     positionalMomentumY: number;
     positionalMomentumZ: number;
@@ -9,24 +12,24 @@ export default class State {
     movingInXPositive: boolean;
     movingInXNegative: boolean;
 
-    updateState(position: Vector3) {
-        if (this.movingInXPositive && position.x > xPositivePositionMax) {
-            this.movingInXPositive = false;
-        }
-        if (this.movingInXPositive) {
+    updateState() {
+        if ((this.movingInXPositive || this.positionalMomentumX > 0) && this.positionX > xPositivePositionMax) {
+            this.positionalMomentumX = 0;
+        } else if (this.movingInXPositive) {
             this.positionalMomentumX = defaultLateralMovementPerFrame
         } else if (this.positionalMomentumX > 0 && !this.movingInXPositive) {
             this.positionalMomentumX = 0;
         }
 
-        if (this.movingInXNegative && position.x < xNegativePositionMax) {
-            this.movingInXNegative = false;
-        }
-        if (this.movingInXNegative) {
+        if ((this.movingInXNegative || this.positionalMomentumX < 0) && this.positionX < xNegativePositionMax) {
+            this.positionalMomentumX = 0;
+        } else if (this.movingInXNegative) {
             this.positionalMomentumX = -defaultLateralMovementPerFrame
         } else if (this.positionalMomentumX < 0 && !this.movingInXNegative) {
             this.positionalMomentumX = 0;
         }
+
+        this.positionX += this.positionalMomentumX
     }
 
     moveInXPositive() {
@@ -48,6 +51,10 @@ export default class State {
     }
 
     constructor() {
+        this.positionX = 0;
+        this.positionY = 0;
+        this.positionZ = 0;
+
         this.positionalMomentumX = 0;
         this.positionalMomentumY = 0;
         this.positionalMomentumZ = 0;

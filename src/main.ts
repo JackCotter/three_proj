@@ -20,8 +20,8 @@ const state = new State();
 function animate() {
 	requestAnimationFrame( animate );
 
-    state.updateState(cube.position);
-    cube.position.x += state.positionalMomentumX
+    state.updateState();
+    cube.position.x = state.positionX;
 
 	renderer.render( scene, camera );
 }
