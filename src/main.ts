@@ -22,6 +22,7 @@ function animate() {
 
     state.updateState();
     cube.position.x = state.positionX;
+    cube.rotation.y = state.rotationY;
 
 	renderer.render( scene, camera );
 }
